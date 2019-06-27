@@ -1,0 +1,2 @@
+pyramid>=1.10.4
+PyGithub>=1.43.7
