@@ -50,6 +50,11 @@ class PayloadView(object):
         print("Pinged! Webhook created with id {}!".format(self.payload["hook"]["id"]))
         return {"status": 200}
 
+    @view_config()
+    def payload_else(self):
+        print("ERROR: Unknown event! \n", self.request)
+        return {"status": 500}
+
 
 if __name__ == "__main__":
     config = Configurator()
@@ -57,5 +62,5 @@ if __name__ == "__main__":
     config.scan()
 
     app = config.make_wsgi_app()
-    server = make_server("0.0.0.0", 80, app)
+    server = make_server("0.0.0.0", 8080, app)
     server.serve_forever()
