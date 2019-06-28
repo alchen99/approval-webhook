@@ -23,7 +23,7 @@ class PayloadView(object):
         self.request = request
         # Payload from Github, it's a dict
         self.payload = self.request.json
-        with open('/etc/github', 'r') as file:
+        with open('/etc/github/oath', 'r') as file:
             self.github = Github(file.read().replace('\n', ''))
 
     @view_config(header="X-Github-Event:push")
