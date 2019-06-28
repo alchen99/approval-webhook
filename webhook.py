@@ -23,7 +23,7 @@ class PayloadView(object):
         self.request = request
         # Payload from Github, it's a dict
         self.payload = self.request.json
-        with open('/etc/github/oath', 'r') as file:
+        with open('/etc/github/oauth', 'r') as file:
             self.github = Github(file.read().replace('\n', ''))
 
     @view_config(header="X-Github-Event:push")
@@ -66,6 +66,7 @@ class PayloadView(object):
                 labels = [label['name'] for label in self.payload['issue']['labels']]
                 if "needs-2-approvals" in labels:
                     pr.remove_from_labels('needs-2-approvals')
+                    pr.add_to_labels('approved2')
                     print("Removed label needs-2-approvals from PR!")
 
         return Response("success")
