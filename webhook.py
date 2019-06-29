@@ -8,7 +8,26 @@ from pyramid.view import view_config, view_defaults
 from pyramid.response import Response
 from github import Github
 
+HELP = "webhook/help"
 ENDPOINT = "webhook"
+
+@view_defaults(
+    route_name=HELP
+)
+class PluginHelp(object):
+    """
+    View Plugin Help.
+    """
+
+    def __init__(self, request):
+        self.request = request
+
+    @view_config()
+    def payload_help(self):
+        print("Approval2 Prow Plugin Help")
+        print("This plugin checks for 2 approvals")
+        return Response("success")
+
 
 @view_defaults(
     route_name=ENDPOINT, renderer="json", request_method="POST"
@@ -84,6 +103,7 @@ class PayloadView(object):
 
 if __name__ == "__main__":
     config = Configurator()
+    config.add_route(HELP, "/{}/help".format(ENDPOINT))
     config.add_route(ENDPOINT, "/{}".format(ENDPOINT))
     config.scan()
 
