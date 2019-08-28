@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: approval2
+  namespace: default
+  labels:
+    SERVICENAME: approval2
+  annotations:
+    build: "1.5"
+    builder: "buildbot"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      SERVICENAME: approval2
+  template:
+    metadata:
+      labels:
+        SERVICENAME: approval2
+      annotations:
+        build: "1.5"
+        builder: "buildbot"
+    spec:
+      containers:
+      - name: approval2
+        image: alchen99/approval2:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: docker-registry-image-pull-secret
+          mountPath: /mnt/secrets/docker-registry-image-pull-secret
+          readOnly: true
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+        - name: config
+          mountPath: /etc/config
+          readOnly: true
+      volumes:
+      - name: docker-registry-image-pull-secret
+        secret:
+          secretName: docker-registry-image-pull-secret
+      - name: oauth
+        secret:
+          secretName: oauth-token
+      - name: config
+        configMap:
+          name: config
+      imagePullSecrets:
+      - name: docker-registry-image-pull-secret
